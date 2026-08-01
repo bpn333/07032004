@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bipin Lamsal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --panel: #0a0a0a;
+        --border: #1f2a1f;
+        --green: #3ddc3d;
+        --green-dim: #3a5a3a;
+        --blue: #4fa8ff;
+        --white: #e8e8e8;
+        --muted: #7d8b7d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        font-family: "Roboto Mono", monospace;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        padding: clamp(12px, 4vw, 32px) clamp(8px, 3vw, 16px);
+      }
+      .window {
+        width: 100%;
+        max-width: 760px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .titlebar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px clamp(12px, 4vw, 20px);
+        border-bottom: 1px solid var(--border);
+      }
+      .dots {
+        display: flex;
+        gap: 7px;
+        flex: 0 0 auto;
+      }
+      .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+      .dot.red {
+        background: #ff5f56;
+      }
+      .dot.yellow {
+        background: #ffbd2e;
+      }
+      .dot.green {
+        background: #27c93f;
+      }
+      .titlebar .path {
+        color: var(--green);
+        font-size: clamp(10px, 2.6vw, 13px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .titlebar .clock {
+        color: var(--green);
+        font-size: clamp(10px, 2.6vw, 13px);
+        flex: 0 0 auto;
+      }
+      .content {
+        padding: clamp(16px, 5vw, 28px) clamp(14px, 5vw, 28px)
+          clamp(20px, 5vw, 32px);
+      }
+      h1 {
+        color: var(--green);
+        font-size: clamp(28px, 8vw, 48px);
+        font-weight: 700;
+        margin: 8px 0 6px;
+        letter-spacing: 0.5px;
+        word-break: break-word;
+      }
+      .rule {
+        color: var(--green-dim);
+        font-size: 14px;
+        letter-spacing: 1px;
+        margin-bottom: 18px;
+        user-select: none;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .comment {
+        color: var(--green);
+        font-size: clamp(12px, 3vw, 14px);
+        margin: 4px 0;
+      }
+      .comment .accent {
+        color: var(--blue);
+      }
+      .birth-line {
+        color: var(--white);
+        font-weight: 700;
+        font-size: clamp(14px, 3.6vw, 16px);
+        margin: 2px 0 4px;
+        word-break: break-word;
+      }
+      .section-gap {
+        height: 22px;
+      }
+      .uptime {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 12px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: clamp(10px, 3vw, 16px);
+        padding: 14px clamp(12px, 4vw, 18px);
+        border-bottom: 1px solid var(--border);
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .icon {
+        flex: 0 0 auto;
+        width: 19px;
+        color: var(--green);
+        display: flex;
+        align-items: center;
+      }
+      .row-body {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        row-gap: 6px;
+        column-gap: clamp(12px, 4vw, 20px);
+        min-width: 0;
+      }
+      .main {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        white-space: nowrap;
+      }
+      .main .num {
+        color: var(--green);
+        font-size: clamp(18px, 4.6vw, 24px);
+        font-weight: 700;
+      }
+      .main .label {
+        color: var(--muted);
+        font-size: clamp(11px, 2.8vw, 13px);
+      }
+      .rest {
+        color: var(--white);
+        font-size: clamp(11px, 2.8vw, 13px);
+        line-height: 1.5;
+        border-left: 1px solid var(--border);
+        padding-left: clamp(12px, 4vw, 20px);
+        flex: 1 1 160px;
+        min-width: 120px;
+      }
+      .quote {
+        color: var(--white);
+        font-size: clamp(12px, 3vw, 14px);
+        margin-top: 22px;
+        word-break: break-word;
+      }
+      .quote .prompt {
+        color: var(--green);
+        margin-right: 8px;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 20px 0;
+      }
+      .work-line {
+        color: var(--white);
+        font-size: clamp(12px, 3vw, 14px);
+        margin-bottom: 8px;
+      }
+      .work-line .prompt {
+        color: var(--green);
+        margin-right: 8px;
+      }
+      a.link {
+        color: var(--blue);
+        text-decoration: underline;
+        font-size: clamp(11px, 3vw, 14px);
+        word-break: break-all;
+      }
+      .final-prompt {
+        color: var(--green);
+        font-size: clamp(12px, 3vw, 14px);
+        margin-top: 4px;
+      }
+      .cursor {
+        display: inline-block;
+        width: 9px;
+        height: 16px;
+        background: var(--green);
+        vertical-align: middle;
+        margin-left: 6px;
+        animation: blink 1s step-start infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @media (max-width: 480px) {
+        .row {
+          align-items: flex-start;
+        }
+        .row-body {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .rest {
+          border-left: none;
+          padding-left: 0;
+          padding-top: 2px;
+          min-width: 0;
+          flex-basis: auto;
+        }
+      }
+      @media (max-width: 360px) {
+        .titlebar .path {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <div class="titlebar">
+        <div class="dots">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="path">bpn@life:~</div>
+        <div class="clock" id="clock">00:00:00</div>
+      </div>
+
+      <div class="content">
+        <h1>Bipin Lamsal</h1>
+        <div class="rule">----------------------------------------</div>
+
+        <div class="comment">// I was born on</div>
+        <div class="birth-line" id="birth-line">-</div>
+        <div class="comment">// Local time (your browser)</div>
+
+        <div class="section-gap"></div>
+
+        <div class="comment">
+          // Uptime: <span class="accent">since birth</span>
+        </div>
+
+        <div class="uptime">
+          <div class="row">
+            <div class="icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4.5" width="18" height="16" rx="1.5"></rect>
+                <line x1="3" y1="9.5" x2="21" y2="9.5"></line>
+                <line x1="8" y1="2.5" x2="8" y2="6.5"></line>
+                <line x1="16" y1="2.5" x2="16" y2="6.5"></line>
+              </svg>
+            </div>
+            <div class="row-body">
+              <div class="main">
+                <span class="num" id="v-years">0</span
+                ><span class="label">years</span>
+              </div>
+              <div class="rest" id="r-years">-</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="9"></circle>
+                <polyline points="12 7 12 12 15.5 14"></polyline>
+              </svg>
+            </div>
+            <div class="row-body">
+              <div class="main">
+                <span class="num" id="v-days">0</span
+                ><span class="label">days</span>
+              </div>
+              <div class="rest" id="r-days">-</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="4 6 10 12 4 18"></polyline>
+                <line x1="12" y1="18" x2="20" y2="18"></line>
+              </svg>
+            </div>
+            <div class="row-body">
+              <div class="main">
+                <span class="num" id="v-hours">0</span
+                ><span class="label">hours</span>
+              </div>
+              <div class="rest" id="r-hours">-</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="8.5 6 3 12 8.5 18"></polyline>
+                <polyline points="15.5 6 21 12 15.5 18"></polyline>
+              </svg>
+            </div>
+            <div class="row-body">
+              <div class="main">
+                <span class="num" id="v-minutes">0</span
+                ><span class="label">minutes</span>
+              </div>
+              <div class="rest" id="r-minutes">-</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="icon">
+              <svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="9" y1="3" x2="7" y2="21"></line>
+                <line x1="17" y1="3" x2="15" y2="21"></line>
+                <line x1="4" y1="9" x2="20" y2="9"></line>
+                <line x1="3" y1="15" x2="19" y2="15"></line>
+              </svg>
+            </div>
+            <div class="row-body">
+              <div class="main">
+                <span class="num" id="v-seconds">0</span
+                ><span class="label">seconds</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <span class="prompt">&gt;_</span>Life is a long process of debugging.
+        </div>
+
+        <hr />
+
+        <div class="work-line">
+          <span class="prompt">&gt;_</span>Check out my portfolio
+        </div>
+        <a
+          class="link"
+          href="https://bpn.localplayer.dev/"
+          target="_blank"
+          rel="noopener"
+          >https://bpn.localplayer.dev/</a
+        >
+
+        <hr />
+
+        <div class="final-prompt">bpn@life:~$<span class="cursor"></span></div>
+      </div>
+    </div>
+
+    <script>
+      // Birth moment: 7 March 2004, 07:00 AM Nepal Standard Time (UTC+5:45)
+      // Represented as a fixed instant in time, then displayed in the viewer's local timezone.
+      var birthUTC = Date.UTC(2004, 2, 7, 7, 0, 0) - (5 * 60 + 45) * 60 * 1000;
+      var birthDate = new Date(birthUTC);
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function updateClock() {
+        var now = new Date();
+        document.getElementById("clock").textContent =
+          pad(now.getHours()) +
+          ":" +
+          pad(now.getMinutes()) +
+          ":" +
+          pad(now.getSeconds());
+      }
+
+      function formatBirthLine() {
+        var opts = { day: "numeric", month: "long", year: "numeric" };
+        var dateStr = birthDate.toLocaleDateString(undefined, opts);
+        var timeStr = birthDate.toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        document.getElementById("birth-line").textContent =
+          dateStr + " \u2022 " + timeStr;
+      }
+
+      function updateUptime() {
+        var now = new Date();
+        var diffMs = now.getTime() - birthDate.getTime();
+        if (diffMs < 0) diffMs = 0;
+
+        var totalSeconds = Math.floor(diffMs / 1000);
+        var totalMinutes = Math.floor(totalSeconds / 60);
+        var totalHours = Math.floor(totalMinutes / 60);
+        var totalDays = Math.floor(totalHours / 24);
+
+        // Calendar-accurate years/months/days breakdown
+        var years = now.getFullYear() - birthDate.getFullYear();
+        var months = now.getMonth() - birthDate.getMonth();
+        var days = now.getDate() - birthDate.getDate();
+        var hh = now.getHours() - birthDate.getHours();
+        var mm = now.getMinutes() - birthDate.getMinutes();
+        var ss = now.getSeconds() - birthDate.getSeconds();
+
+        if (ss < 0) {
+          ss += 60;
+          mm -= 1;
+        }
+        if (mm < 0) {
+          mm += 60;
+          hh -= 1;
+        }
+        if (hh < 0) {
+          hh += 24;
+          days -= 1;
+        }
+        if (days < 0) {
+          var prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+          days += prevMonth.getDate();
+          months -= 1;
+        }
+        if (months < 0) {
+          months += 12;
+          years -= 1;
+        }
+
+        // years row: age in years + remaining days/hours/min/sec
+        document.getElementById("v-years").textContent = years.toLocaleString();
+        document.getElementById("r-years").textContent =
+          totalDays - years * 365 - Math.floor(years / 4) >= 0
+            ? daysHoursMinsSecs(diffMs, years)
+            : "";
+
+        document.getElementById("v-days").textContent =
+          totalDays.toLocaleString();
+        document.getElementById("r-days").textContent =
+          pad(hh) + " hours " + pad(mm) + " minutes " + pad(ss) + " seconds";
+
+        document.getElementById("v-hours").textContent =
+          totalHours.toLocaleString();
+        document.getElementById("r-hours").textContent =
+          pad(mm) + " minutes " + pad(ss) + " seconds";
+
+        document.getElementById("v-minutes").textContent =
+          totalMinutes.toLocaleString();
+        document.getElementById("r-minutes").textContent = pad(ss) + " seconds";
+
+        document.getElementById("v-seconds").textContent =
+          totalSeconds.toLocaleString();
+      }
+
+      function daysHoursMinsSecs(diffMs, years) {
+        // remainder after full years, expressed as days/hours/min/sec
+        var yearsMs = years * 365.2425 * 24 * 60 * 60 * 1000;
+        var remMs = diffMs - yearsMs;
+        if (remMs < 0) remMs = diffMs % (365.2425 * 24 * 60 * 60 * 1000);
+        var remSeconds = Math.floor(remMs / 1000);
+        var d = Math.floor(remSeconds / 86400);
+        var h = Math.floor((remSeconds % 86400) / 3600);
+        var m = Math.floor((remSeconds % 3600) / 60);
+        var s = remSeconds % 60;
+        return (
+          pad(d) +
+          " days " +
+          pad(h) +
+          " hours " +
+          pad(m) +
+          " minutes " +
+          pad(s) +
+          " seconds"
+        );
+      }
+
+      formatBirthLine();
+      updateClock();
+      updateUptime();
+      setInterval(function () {
+        updateClock();
+        updateUptime();
+      }, 1000);
+    </script>
+  </body>
+</html>
