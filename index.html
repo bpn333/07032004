@@ -504,12 +504,29 @@
           years -= 1;
         }
 
-        // years row: age in years + remaining days/hours/min/sec
+        // years row: age in years + remaining days/hours/min/sec (calendar-accurate)
+        var anniversary = new Date(
+          birthDate.getFullYear() + years,
+          birthDate.getMonth(),
+          birthDate.getDate(),
+          birthDate.getHours(),
+          birthDate.getMinutes(),
+          birthDate.getSeconds(),
+        );
+        var daysSinceAnniversary = Math.floor(
+          (now.getTime() - anniversary.getTime()) / 86400000,
+        );
+
         document.getElementById("v-years").textContent = years.toLocaleString();
         document.getElementById("r-years").textContent =
-          totalDays - years * 365 - Math.floor(years / 4) >= 0
-            ? daysHoursMinsSecs(diffMs, years)
-            : "";
+          pad(daysSinceAnniversary) +
+          " days " +
+          pad(hh) +
+          " hours " +
+          pad(mm) +
+          " minutes " +
+          pad(ss) +
+          " seconds";
 
         document.getElementById("v-days").textContent =
           totalDays.toLocaleString();
@@ -527,28 +544,6 @@
 
         document.getElementById("v-seconds").textContent =
           totalSeconds.toLocaleString();
-      }
-
-      function daysHoursMinsSecs(diffMs, years) {
-        // remainder after full years, expressed as days/hours/min/sec
-        var yearsMs = years * 365.2425 * 24 * 60 * 60 * 1000;
-        var remMs = diffMs - yearsMs;
-        if (remMs < 0) remMs = diffMs % (365.2425 * 24 * 60 * 60 * 1000);
-        var remSeconds = Math.floor(remMs / 1000);
-        var d = Math.floor(remSeconds / 86400);
-        var h = Math.floor((remSeconds % 86400) / 3600);
-        var m = Math.floor((remSeconds % 3600) / 60);
-        var s = remSeconds % 60;
-        return (
-          pad(d) +
-          " days " +
-          pad(h) +
-          " hours " +
-          pad(m) +
-          " minutes " +
-          pad(s) +
-          " seconds"
-        );
       }
 
       formatBirthLine();
